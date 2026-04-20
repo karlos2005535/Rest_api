@@ -44,3 +44,41 @@ langkah-langkah untuk menjalankan proyek ini secara lokal:
    ```bash
    flutter pub get
    ```
+   Output datanya dalam bentuk format JSON seperti ini :
+   [
+   {
+   "id": 5,
+   "title": "Set up database",
+   "description": "Membuat ERD dengan menggunakan SQL",
+   "status": "To Do",
+   "created_at": "2026-04-20 16:35:52"
+   },
+   {
+   "id": 4,
+   "title": "Membuat ui",
+   "description": "Biar kelihatan keren",
+   "status": "To Do",
+   "created_at": "2026-04-18 14:13:54"
+   },
+   {
+   "id": 3,
+   "title": "Selesaikan Skripsi Bab 1",
+   "description": "Menyusun latar belakang terkait tracking.",
+   "status": "Done",
+   "created_at": "2026-04-17 23:09:23"
+   },
+   {
+   "id": 2,
+   "title": "Konfigurasi Sensor IoT",
+   "description": "Integrasi ESP32 dengan sensor suhu.",
+   "status": "To Do",
+   "created_at": "2026-04-17 23:09:23"
+   },
+   {
+   "id": 1,
+   "title": "Setup GitLab CI/CD",
+   "description": "Konfigurasi pipeline otomatis untuk deployment aplikasi.",
+   "status": "In Progress",
+   "created_at": "2026-04-17 23:09:23"
+   }
+   ]
