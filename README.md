@@ -1,84 +1,55 @@
-# Task Master App
+# Task Manager Real-Time App
 
-## 1. Project Overview
+Aplikasi manajemen tugas berbasis Flutter yang terintegrasi dengan backend PHP dan WebSocket untuk pembaruan data secara _real-time_. Proyek ini mengimplementasikan arsitektur _clean code_ dengan BLoC Pattern.
 
-Task Master adalah aplikasi manajemen tugas (Task Management) yang dirancang untuk membantu pengguna melacak produktivitas. Sistem ini terdiri dari aplikasi mobile/web yang dibangun dengan antarmuka yang interaktif, serta dihubungkan ke server REST API secara real-time untuk mengelola data tugas (Create, Read, Update, Delete).
+## Fitur Utama
 
-## 2. Tech Stack
+- **State Management:** Menggunakan **BLoC** untuk alur data yang reaktif dan terprediksi.
+- **Real-time Updates:** Menggunakan **Ratchet PHP (WebSocket)** untuk sinkronisasi data antar perangkat secara instan.
+- **RESTful API:** Komunikasi data standar dengan backend PHP.
+- **Modern UI:** Antarmuka responsif dengan Flutter.
 
-Sistem ini dibangun menggunakan perpaduan teknologi berikut:
+---
 
-- **Frontend:** Flutter (Dart), `http` (untuk API Request).
-- **Backend / API:** PHP Native (PDO).
-- **Database:** MySQL (XAMPP).
-- **Architecture:** Client-Server / RESTful API.
+## Instalasi & Persiapan
 
-## 3. Database Diagram
+### 1. Backend (PHP & Database)
 
-Database menggunakan satu tabel utama bernama `tasks`. Berikut adalah struktur skema databasenya:
-
-| Column Name | Data Type    | Constraints                 |
-| ----------- | ------------ | --------------------------- |
-| id          | INT(11)      | PRIMARY KEY, AUTO_INCREMENT |
-| title       | VARCHAR(255) | NOT NULL                    |
-| description | TEXT         | NOT NULL                    |
-| status      | VARCHAR(50)  | DEFAULT 'To Do'             |
-| created_at  | TIMESTAMP    | DEFAULT CURRENT_TIMESTAMP   |
-
-## 4. Installation Guide
-
-langkah-langkah untuk menjalankan proyek ini secara lokal:
-
-### Setup Backend (API & Database)
-
-1. Aktifkan **Apache** dan **MySQL** pada XAMPP.
-2. Membuka `http://localhost/phpmyadmin`, lalu buat database baru bernama `task_master`.
-3. Buat tabel `tasks`.
-4. Membuat folder di `C:\xampp\htdocs\` untuk menyimpan semua code php.
-5. Kemudian pastikan konfigurasi _username_ dan _password_ di file `db.php` sudah sesuai dengan XAMPP.
-
-### Setup Frontend (Flutter)
-
-1. Buka terminal pada folder proyek Flutter.
-2. Jalankan perintah untuk mengunduh semua _library_:
+1. Pastikan **XAMPP** (Apache & MySQL) sudah aktif.
+2. Impor file database `database/task_manager_db.sql` ke **phpMyAdmin**.
+3. Pindahkan folder `task_api` ke direktori `C:\xampp\htdocs\`.
+4. Masuk ke folder `task_api` melalui terminal, kemudian instal dependensi Ratchet:
    ```bash
-   flutter pub get
+   composer require cboden/ratchet
    ```
-   Output datanya dalam bentuk format JSON seperti ini :
-   [
-   {
-   "id": 5,
-   "title": "Set up database",
-   "description": "Membuat ERD dengan menggunakan SQL",
-   "status": "To Do",
-   "created_at": "2026-04-20 16:35:52"
-   },
-   {
-   "id": 4,
-   "title": "Membuat ui",
-   "description": "Biar kelihatan keren",
-   "status": "To Do",
-   "created_at": "2026-04-18 14:13:54"
-   },
-   {
-   "id": 3,
-   "title": "Selesaikan Skripsi Bab 1",
-   "description": "Menyusun latar belakang terkait tracking.",
-   "status": "Done",
-   "created_at": "2026-04-17 23:09:23"
-   },
-   {
-   "id": 2,
-   "title": "Konfigurasi Sensor IoT",
-   "description": "Integrasi ESP32 dengan sensor suhu.",
-   "status": "To Do",
-   "created_at": "2026-04-17 23:09:23"
-   },
-   {
-   "id": 1,
-   "title": "Setup GitLab CI/CD",
-   "description": "Konfigurasi pipeline otomatis untuk deployment aplikasi.",
-   "status": "In Progress",
-   "created_at": "2026-04-17 23:09:23"
-   }
-   ]
+
+## Aplikasi Flutter
+
+1. Pastikan Flutter SDK sudah terinstal.
+2. Di dalam proyek Flutter, pastikan file lib/services/api_service.dart sudah diarahkan ke alamat API yang benar.
+   Gunakan http://10.0.2.2/task_api/... untuk Android Emulator.
+   Gunakan http://localhost/task_api/... untuk Testing di Browser/Desktop.
+
+## Cara Menjalankan Aplikasi
+
+1. Menjalankan WebSocket Server (Backend)
+   Buka terminal baru di direktori task_api, jalankan perintah berikut agar fitur notifikasi aktif:
+   php C:\xampp\htdocs\task_api\notification_server.php
+
+## Menjalankan Flutter
+
+Buka terminal di root proyek Flutter, kemudian jalankan:
+flutter run
+
+## Arsitektur Sistem
+
+Sistem ini dirancang dengan prinsip pemisahan tanggung jawab (Separation of Concerns) untuk memudahkan maintenance:
+
+1. UI Layer: Menampilkan Task menggunakan Widget yang mendengarkan State dari BLoC.
+2. Logic Layer (BLoC): Memproses Event dari pengguna dan mengubah State aplikasi.
+3. Data Layer: Mengelola komunikasi HTTP via ApiService dan WebSocket.
+4. Backend: Server PHP yang menangani query MySQL dan melakukan broadcast WebSocket.
+
+### Link dokumentasi pengujian Api:
+
+1.  **Link Postman**: Link postman `https://thomaskarlosbaco-23659.postman.co/workspace/Thomas-Carlos-Baco's-Workspace~698730d1-4556-4170-827f-98572c31caac/request/55892489-b35d7098-10e7-4b95-b9f7-156eecb1e04c?action=share&creator=55892489`.
