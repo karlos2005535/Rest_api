@@ -1,55 +1,50 @@
-# Task Manager Real-Time App
+# 📝 Task Master - Real-Time Task Management App
 
-Aplikasi manajemen tugas berbasis Flutter yang terintegrasi dengan backend PHP dan WebSocket untuk pembaruan data secara _real-time_. Proyek ini mengimplementasikan arsitektur _clean code_ dengan BLoC Pattern.
-
-## Fitur Utama
-
-- **State Management:** Menggunakan **BLoC** untuk alur data yang reaktif dan terprediksi.
-- **Real-time Updates:** Menggunakan **Ratchet PHP (WebSocket)** untuk sinkronisasi data antar perangkat secara instan.
-- **RESTful API:** Komunikasi data standar dengan backend PHP.
-- **Modern UI:** Antarmuka responsif dengan Flutter.
+Aplikasi manajemen tugas berbasis **Flutter** yang terintegrasi secara harmonis dengan backend **PHP (REST API)** dan **WebSocket** untuk pembaruan data secara *real-time*. Proyek ini dirancang secara kolaboratif untuk memenuhi Ujian Akhir Semester dengan menerapkan arsitektur *Clean Code*, *Separation of Concerns*, dan optimasi performa tinggi.
 
 ---
 
-## Instalasi & Persiapan
+## 🚀 Fitur Utama & Kriteria Teknis
 
-### 1. Backend (PHP & Database)
+Aplikasi ini telah memenuhi seluruh spesifikasi teknis yang diwajibkan dalam rubrik penilaian:
 
-1. Pastikan **XAMPP** (Apache & MySQL) sudah aktif.
-2. Impor file database `database/task_manager_db.sql` ke **phpMyAdmin**.
-3. Pindahkan folder `task_api` ke direktori `C:\xampp\htdocs\`.
-4. Masuk ke folder `task_api` melalui terminal, kemudian instal dependensi Ratchet:
-   ```bash
-   composer require cboden/ratchet
-   ```
+### Sisi Client (Frontend - Flutter)
+* **Penerapan Arsitektur:** Struktur kode terpisah secara rapi menjadi layer UI (`screens`), Business Logic (`blocs`), dan Data Access (`services`/`models`).
+* **State Management:** Menggunakan **BLoC (Business Logic Component Pattern)** untuk mengelola alur data global aplikasi yang responsif tanpa dependensi pada `setState` manual.
+* **Asynchronous Programming:**
+    * **Future:** Digunakan untuk penanganan operasi *fetching* data HTTP standar (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`).
+    * **Stream:** Digunakan untuk mendengarkan (*listening*) aliran data asinkronus secara terus-menerus dari WebSocket backend.
 
-## Aplikasi Flutter
+### Sisi Server (Backend - PHP API)
+* **Arsitektur Backend:** Menggunakan pola terstruktur berorientasi objek: **Controller ➔ Service ➔ Repository** untuk memastikan isolasi logika bisnis.
+* **Implementasi WebSocket:** Menggunakan library **Ratchet PHP** untuk menangani komunikasi dua arah (*real-time broadcast*) saat terjadi perubahan tugas.
+* **Implementasi Caching:** Menggunakan **Redis Cache Layer** pada `TaskService.php` untuk mempercepat *high-read throughput* pemanggilan data list tugas dan mengurangi beban query langsung ke database MySQL.
 
-1. Pastikan Flutter SDK sudah terinstal.
-2. Di dalam proyek Flutter, pastikan file lib/services/api_service.dart sudah diarahkan ke alamat API yang benar.
-   Gunakan http://10.0.2.2/task_api/... untuk Android Emulator.
-   Gunakan http://localhost/task_api/... untuk Testing di Browser/Desktop.
+---
 
-## Cara Menjalankan Aplikasi
+## 🛠️ Panduan Instalasi & Persiapan Lokal
 
-1. Menjalankan WebSocket Server (Backend)
-   Buka terminal baru di direktori task_api, jalankan perintah berikut agar fitur notifikasi aktif:
-   php C:\xampp\htdocs\task_api\notification_server.php
+### 1. Persiapan Database (MySQL)
+1. Aktifkan modul **MySQL** pada XAMPP / Laragon Control Panel.
+2. Akses **phpMyAdmin** (`http://localhost/phpmyadmin`).
+3. Buat database baru bernama **`task_master`**.
+4. Impor struktur tabel murni ke dalam database tersebut. Pastikan tabel bernama `tasks` telah siap dengan kolom utama: `id`, `title`, `description`, `status`, dan `created_at`.
 
-## Menjalankan Flutter
+### 2. Konfigurasi Jaringan & Alamat API
+Sesuaikan alamat variabel `apiUrl` pada file `lib/services/api_service.dart` di proyek Flutter Anda dengan target pengujian:
+* **Android Emulator:** Gunakan bridge IP khusus `http://10.0.2.2:8000/controllers/TaskController.php`
+* **Testing Lokal Browser/Desktop:** Gunakan `http://localhost:8000/controllers/TaskController.php`
 
-Buka terminal di root proyek Flutter, kemudian jalankan:
-flutter run
+---
 
-## Arsitektur Sistem
+## 🏃‍♂️ Cara Menjalankan Aplikasi
 
-Sistem ini dirancang dengan prinsip pemisahan tanggung jawab (Separation of Concerns) untuk memudahkan maintenance:
+Pastikan Anda membuka terminal terpisah untuk setiap komponen berikut:
 
-1. UI Layer: Menampilkan Task menggunakan Widget yang mendengarkan State dari BLoC.
-2. Logic Layer (BLoC): Memproses Event dari pengguna dan mengubah State aplikasi.
-3. Data Layer: Mengelola komunikasi HTTP via ApiService dan WebSocket.
-4. Backend: Server PHP yang menangani query MySQL dan melakukan broadcast WebSocket.
+### Langkah 1: Jalankan Redis Server (Untuk Caching)
+Pastikan layanan Redis lokal Anda telah aktif (via WSL atau Windows Native Port) agar lapisan cache internal backend tidak mengalami kegagalan jabat tangan (*handshake*).
 
-### Link dokumentasi pengujian Api:
-
-1.  **Link Postman**: Link postman `https://thomaskarlosbaco-23659.postman.co/workspace/Thomas-Carlos-Baco's-Workspace~698730d1-4556-4170-827f-98572c31caac/request/55892489-b35d7098-10e7-4b95-b9f7-156eecb1e04c?action=share&creator=55892489`.
+### Langkah 2: Jalankan Server REST API (PHP Backend)
+Masuk ke root direktori folder backend (`REST_API`), lalu jalankan server internal PHP bawaan dengan melakukan binding ke port `8000`:
+```bash
+php -S 0.0.0.0:8000
